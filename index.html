@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>Игра: Прыжки от шипов</title>
+  <title>Geometry dash</title>
   <link rel="stylesheet" href="style.css">
   
   <style>
@@ -27,9 +27,9 @@
     #cube {
       position: absolute;
       bottom: 50px;
-      left: 100px;
-      width: 50px;
-      height: 50px;
+      left: 350px;
+      width: 100px;
+      height: 100px;
       background: blue;
       transition: bottom 0.2s ease-out;
       background-image: url("https://kartinki.pics/uploads/posts/2022-02/1644978991_32-kartinkin-net-p-kartinki-geometriya-dash-34.jpg"); /* 👈 путь к картинке */
@@ -40,8 +40,8 @@
     #spike {
       position: absolute;
       bottom: 50px;
-      width: 30px;
-      height: 30px;
+      width: 50px;
+      height: 50px;
       background: red;
       clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
     }
@@ -99,7 +99,8 @@
   </div>
 
   <audio id="jump-sound" src="jump-15984.mp3"></audio>
-    <audio id="music" src="https://files.catbox.moe/f0fflr.mp3" loop></audio>
+  <audio id="death" src="smerti.mp3"></audio>
+    <audio id="music" src="geometrydash.mp3" loop></audio>
   </div>
 
   <script>
@@ -110,6 +111,7 @@
     const scoreText = document.getElementById('score');
     const levelText = document.getElementById('level');
     const jumpSound = document.getElementById('jump-sound');
+    const death = document.getElementById('death');
     const music = document.getElementById('music');
     const spike2 = document.getElementById('spike2');
 
@@ -118,7 +120,7 @@
     let gameOver = false;
     let spikeX = window.innerWidth;
     let spikeX2 = window.innerWidth + 300;
-    let speed = 5;
+    let speed = 13;
     let score = 0;
     let level = 1;
     let rotation = 0;
@@ -132,7 +134,7 @@
     function jump() {
         
         isJumping = true;
-  cube.style.bottom = '150px';
+  cube.style.bottom = '350px';
   jumpSound.currentTime = 0;
       jumpSound.play();
 
@@ -191,6 +193,8 @@ setTimeout(() => {
       const cubeRect = cube.getBoundingClientRect();
       const spikeRect1 = spike.getBoundingClientRect();
       const spikeRect2 = spike2.getBoundingClientRect();
+      death.currentTime = 0;
+      death.play();
 
       const collide1 = !(
         cubeRect.top > spikeRect1.bottom ||
@@ -208,6 +212,7 @@ setTimeout(() => {
 
       if ((collide1 || (score >= 5 && collide2)) && !gameOver) {
         gameOver = true;
+        
         cube.style.display = 'none';
         message.style.display = 'block';
         restartBtn.style.display = 'block';
@@ -260,7 +265,7 @@ setTimeout(() => {
       cube.style.display = 'block';
       spikeX = window.innerWidth;
       spikeX2 = window.innerWidth + 300;
-      speed = 5;
+      speed = 13;
       score = 0;
       level = 1;
       rotation = 0;
@@ -271,6 +276,7 @@ setTimeout(() => {
       restartBtn.style.display = 'none';
       music.currentTime = 0;
       music.play();
+     
     }
 
     // запуск музыки и игры
