@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Игра: Прыжки от шипов</title>
+  <link rel="stylesheet" href="style.css">
+  
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #eef;
+      font-family: Arial, sans-serif;
+      background-image: url("https://https://images.steamusercontent.com/ugc/1927006848350028219/12951294B17BB60B5889D076FA03DE51BAB31F28/.imgur.com/kIm3GJm.jpg"); /* 🔁 Фон */
+    background-size: cover;
+    background-position: center;
+    }
+
+    #game {
+        position: relative;
+    
+    width: 100vw;
+  height: 100vh;
+  background-image: linear-gradient(to bottom, #8c6cff, #13e96c);
+    }
+
+    #cube {
+      position: absolute;
+      bottom: 50px;
+      left: 100px;
+      width: 50px;
+      height: 50px;
+      background: blue;
+      transition: bottom 0.2s ease-out;
+      background-image: url("https://kartinki.pics/uploads/posts/2022-02/1644978991_32-kartinkin-net-p-kartinki-geometriya-dash-34.jpg"); /* 👈 путь к картинке */
+    background-size: cover;
+    background-position: center;
+    }
+
+    #spike {
+      position: absolute;
+      bottom: 50px;
+      width: 30px;
+      height: 30px;
+      background: red;
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    }
+
+    #message {
+      position: absolute;
+      top: 40%;
+      width: 100%;
+      text-align: center;
+      font-size: 40px;
+      color: red;
+      display: none;
+    }
+
+    #score {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 24px;
+      color: #333;
+    }
+
+    #level {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 24px;
+      color: #333;
+    }
+
+    #restart {
+      position: absolute;
+      top: 60%;
+      width: 100%;
+      text-align: center;
+      display: none;
+    }
+
+    #restart button {
+      font-size: 20px;
+      padding: 10px 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="game">
+     <div id="platform"></div>
+    <div id="cube"></div>
+    <div id="spike"></div>\
+    <div id="spike2"></div>
+    <div id="message">Вы проиграли!</div>
+    <div id="restart"><button onclick="restartGame()">Начать заново</button></div>
+    <div id="score">Счёт: 0</div>
+    <div id="level">Уровень: 1</div>
+  </div>
+
+  <audio id="jump-sound" src="jump-15984.mp3"></audio>
+    <audio id="music" src="https://files.catbox.moe/f0fflr.mp3" loop></audio>
+  </div>
+
+  <script>
+    const cube = document.getElementById('cube');
+    const spike = document.getElementById('spike');
+    const message = document.getElementById('message');
+    const restartBtn = document.getElementById('restart');
+    const scoreText = document.getElementById('score');
+    const levelText = document.getElementById('level');
+    const jumpSound = document.getElementById('jump-sound');
+    const music = document.getElementById('music');
+    const spike2 = document.getElementById('spike2');
+
+
+    let isJumping = false;
+    let gameOver = false;
+    let spikeX = window.innerWidth;
+    let spikeX2 = window.innerWidth + 300;
+    let speed = 5;
+    let score = 0;
+    let level = 1;
+    let rotation = 0;
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key.toLowerCase() === 'w' && !isJumping && !gameOver) {
+        jump();
+      }
+    });
+
+    function jump() {
+        
+        isJumping = true;
+  cube.style.bottom = '150px';
+  jumpSound.currentTime = 0;
+      jumpSound.play();
+
+  setTimeout(() => {
+ rotation += 10;
+ cube.style.transform =  `rotate(${rotation}deg)`;
+}, 312);
+ setTimeout(() => {
+ rotation += 10;
+ cube.style.transform =  `rotate(${rotation}deg)`;
+}, 20);
+
+setTimeout(() => {
+ rotation += 10;
+ cube.style.transform =  `rotate(${rotation}deg)`;
+}, 312);
+ setTimeout(() => {
+ rotation += 10;
+ cube.style.transform =  `rotate(${rotation}deg)`;
+}, 20);
+
+setTimeout(() => {
+ rotation += 10;
+ cube.style.transform =  `rotate(${rotation}deg)`;
+}, 312);
+ setTimeout(() => {
+ rotation += 10;
+ cube.style.transform =  `rotate(${rotation}deg)`;
+}, 20);
+
+setTimeout(() => {
+ rotation += 10;
+ cube.style.transform =  `rotate(${rotation}deg)`;
+}, 231);
+ setTimeout(() => {
+ rotation += 10;
+ cube.style.transform =  `rotate(${rotation}deg)`;
+}, 44);
+
+setTimeout(() => {
+ rotation += 10;
+ cube.style.transform =  `rotate(${rotation}deg)`;
+}, 312);
+
+
+  setTimeout(() => {
+    cube.style.bottom = '50px';
+  
+  
+    setTimeout(() => {
+      isJumping = false;
+    }, 200); 
+  }, 400);
+}
+ function checkCollision() {
+      const cubeRect = cube.getBoundingClientRect();
+      const spikeRect1 = spike.getBoundingClientRect();
+      const spikeRect2 = spike2.getBoundingClientRect();
+
+      const collide1 = !(
+        cubeRect.top > spikeRect1.bottom ||
+        cubeRect.bottom < spikeRect1.top ||
+        cubeRect.right < spikeRect1.left ||
+        cubeRect.left > spikeRect1.right
+      );
+
+      const collide2 = !(
+        cubeRect.top > spikeRect2.bottom ||
+        cubeRect.bottom < spikeRect2.top ||
+        cubeRect.right < spikeRect2.left ||
+        cubeRect.left > spikeRect2.right
+      );
+
+      if ((collide1 || (score >= 5 && collide2)) && !gameOver) {
+        gameOver = true;
+        cube.style.display = 'none';
+        message.style.display = 'block';
+        restartBtn.style.display = 'block';
+        music.pause();
+      }
+    }
+
+    function updateSpikePosition() {
+      if (gameOver) return;
+
+      // первый шип
+      spikeX -= speed;
+      if (spikeX < -30) {
+        spikeX = window.innerWidth + Math.random() * 200;
+        score++;
+        if (score % 5 === 0) {
+          level++;
+          speed += 1;
+        }
+        updateUI();
+      }
+      spike.style.left = spikeX + 'px';
+
+      // второй шип (с 5 очков)
+      if (score >= 5) {
+        spike2.style.display = 'block';
+        spikeX2 -= speed;
+        if (spikeX2 < -30) {
+          spikeX2 = window.innerWidth + 300 + Math.random() * 200;
+        }
+        spike2.style.left = spikeX2 + 'px';
+      } else {
+        spike2.style.display = 'none';
+      }
+
+      checkCollision();
+    }
+
+    function updateUI() {
+      scoreText.textContent = 'Счёт: ' + score;
+      levelText.textContent = 'Уровень: ' + level;
+    }
+
+    function gameLoop() {
+      updateSpikePosition();
+      requestAnimationFrame(gameLoop);
+    }
+
+    function restartGame() {
+      cube.style.display = 'block';
+      spikeX = window.innerWidth;
+      spikeX2 = window.innerWidth + 300;
+      speed = 5;
+      score = 0;
+      level = 1;
+      rotation = 0;
+      cube.style.transform = 'rotate(0deg)';
+      updateUI();
+      gameOver = false;
+      message.style.display = 'none';
+      restartBtn.style.display = 'none';
+      music.currentTime = 0;
+      music.play();
+    }
+
+    // запуск музыки и игры
+    music.play().catch(() => {
+      document.addEventListener('click', () => music.play(), { once: true });
+    });
+
+
+    gameLoop();
+  </script>
+</body>
+</html>
